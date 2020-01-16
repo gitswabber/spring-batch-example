@@ -1,6 +1,8 @@
 package com.swabber.batch.user.greeting;
 
 import com.swabber.batch.user.greeting.chunk.UserGreetingItemProcessor;
+import com.swabber.batch.user.greeting.chunk.UserGreetingItemReader;
+import com.swabber.batch.user.greeting.chunk.UserGreetingItemWriter;
 import com.swabber.model.User;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -36,16 +38,16 @@ public class UserGreetingJobConfig {
     }
 
     @Bean
-    public Step userGreetingStep() {
+    public Step userGreetingStep(UserGreetingItemReader itemReader, UserGreetingItemProcessor itemProcessor, UserGreetingItemWriter itemWriter) {
         return stepBuilder.get("userGreetingStep")
                 .<User, String>chunk(3)
-                .reader(userGreetingItemReader())
-                .processor(userGreetingItemProcessor())
-                .writer(userGreetingItemWriter())
+                .reader(itemReader)
+                .processor(itemProcessor)
+                .writer(itemWriter)
                 .build();
     }
 
-    @Bean
+/*    @Bean
     public FlatFileItemReader<User> userGreetingItemReader() {
         return new FlatFileItemReaderBuilder<User>()
                 .name("userGreetingItemReader")
@@ -66,5 +68,5 @@ public class UserGreetingJobConfig {
                 .resource(new FileSystemResource("greetingMessage.txt"))
                 .lineAggregator(new PassThroughLineAggregator<>())
                 .build();
-    }
+    }*/
 }
